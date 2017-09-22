@@ -1,0 +1,19 @@
+.card {
+	padding: 20px;
+    // background-color: ;
+    border: 1px solid #e1e1e1;
+    -webkit-box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.33);
+	-moz-box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.33);
+    box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.33);
+    max-width: 1022px;
+    margin: 0 auto 0 auto;
+    background-color: #fff;
+	.card-block {
+		overflow: auto;
+	}
+	.actions {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+	}
+}

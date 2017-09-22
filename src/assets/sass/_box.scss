@@ -1,0 +1,36 @@
+.box-s1 {
+  border: $box-border-size solid $box-border-color;
+  margin: 25px 5px;
+  padding: 9px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 3px;
+  color: $box-head-color;
+
+  head {
+    margin-top: -19px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #fff;
+    display: block;
+    float: left;
+    overflow: hidden;
+    color: $box-head-color;
+    font-size: 14px;
+    height: 14px;
+    padding: 2px 5px 2px 5px;
+    align-self: center;
+  }
+
+  footer {
+      background-color: $box-footer-background-color;
+      color: $box-footer-color;
+      display: block;
+      padding: 3px;
+      text-align: center;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      margin: 0 -9px -9px -9px;
+  }
+
+}

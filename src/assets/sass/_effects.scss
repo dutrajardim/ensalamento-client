@@ -1,0 +1,13 @@
+
+
+//slide-fade
+.slide-fade-enter-active {
+  transition: all .2s linear;
+}
+.slide-fade-leave-active {
+  transition: all .2s linear;
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}
