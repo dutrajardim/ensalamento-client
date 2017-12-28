@@ -20,9 +20,15 @@
             <td>{{horario.descricao}}</td>
             <td>
               <div class="btn-group">
-                <button v-on:click="edit(horario)">E</button>
-                <button v-on:click="remove(horario)">X</button>
-                <button v-on:click="ensalamento(horario)">D</button>
+                <button v-on:click="edit(horario)" v-tooltip.bottom="{ content: 'Editar', class:'red' }">
+                  <icon name="edit"></icon>
+                </button>
+                <button v-on:click="remove(horario)" v-tooltip.bottom="{ content: 'Remover', class:'red' }">
+                  <icon name="trash"></icon>
+                </button>
+                <button v-on:click="ensalamento(horario)" v-tooltip.bottom="{ content: 'Visualizar ensalamento', class:'red' }">
+                  <icon name="calendar"></icon>
+                </button>
               </div>
             </td>
           </tr>
@@ -37,6 +43,10 @@
 <script>
 import axios from 'axios'
 import Simplert from 'vue2-simplert'
+import 'vue-awesome/icons/trash'
+import 'vue-awesome/icons/edit'
+import 'vue-awesome/icons/calendar'
+
 export default {
   data () {
     return {

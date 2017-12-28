@@ -1,0 +1,19 @@
+.vue-tooltip {
+    &.red {
+        background-color: white;
+        color: $primary-color;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: bolder;
+
+        .tooltip-arrow {
+            border-color: red;
+        }
+    }
+    &.blue {
+        background-color: blue;
+        .tooltip-arrow {
+            border-color: blue;
+        }
+    }
+}

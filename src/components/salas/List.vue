@@ -9,7 +9,7 @@
           <tr>
             <th>Nome</th>
             <th>Capacidade</th>
-            <th>Ar Condicionado</th>
+            <th style="text-align: center">Ar Condicionado</th>
             <th></th>
           </tr>
         </thead>
@@ -17,14 +17,22 @@
           <tr v-for="sala in salas" v-bind:key="sala.id">
             <td>{{sala.nome}}</td>
             <td>{{sala.capacidade}}</td>
-            <td>
-              <template v-if="sala.arCondicionado">S</template>
-              <template v-else>N</template>
+            <td style="text-align: center">
+              <template v-if="sala.arCondicionado">
+                <icon name="thumbs-up" class="thumbs-up"></icon>
+              </template>
+              <template v-else>
+                <icon name="thumbs-down" class="thumbs-down"></icon>
+              </template>
             </td>
             <td>
               <div class="btn-group">
-                <button v-on:click="edit(sala)">E</button>
-                <button v-on:click="remove(sala)">X</button>
+                <button v-on:click="edit(sala)" v-tooltip.bottom="{ content: 'Editar', class:'red' }">
+                  <icon name="edit"></icon>
+                </button>
+                <button v-on:click="remove(sala)" v-tooltip.bottom="{ content: 'Remover', class: 'red' }">
+                  <icon name="trash"></icon>
+                </button>
               </div>
             </td>
           </tr>
@@ -39,6 +47,11 @@
 <script>
 import axios from 'axios'
 import Simplert from 'vue2-simplert'
+import 'vue-awesome/icons/trash'
+import 'vue-awesome/icons/edit'
+import 'vue-awesome/icons/thumbs-up'
+import 'vue-awesome/icons/thumbs-down'
+
 export default {
   data () {
     return {
@@ -87,5 +100,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.thumbs-up {
+  color: teal;
+}
+.thumbs-down {
+  color: darkred;
+}
 </style>

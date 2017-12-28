@@ -16,8 +16,12 @@
             <td>{{disciplina.nome}}</td>
             <td>
               <div class="btn-group">
-                <button v-on:click="edit(disciplina)">E</button>
-                <button v-on:click="remove(disciplina)">X</button>
+                <button v-on:click="edit(disciplina)" v-tooltip.bottom='{ content: "Editar", class: "red"}'>
+                  <icon name="edit"></icon>
+                </button>
+                <button v-on:click="remove(disciplina)" v-tooltip.bottom='{ content: "Remover", class: "red"}'>
+                  <icon name="trash"></icon>
+                </button>
               </div>
             </td>
           </tr>
@@ -32,6 +36,8 @@
 <script>
 import axios from 'axios'
 import Simplert from 'vue2-simplert'
+import 'vue-awesome/icons/trash'
+import 'vue-awesome/icons/edit'
 export default {
   data () {
     return {

@@ -1,6 +1,6 @@
 <template>
   <nav id="main-nav">
-    <div class="brand"><h1><a href="#">Ensalamento</a></h1><img src="/static/logo.jpg" alt=""></div>
+    <div class="brand"><h1><a href="#">Ensalamento</a></h1><img src="/static/una-logo.jpg" alt=""></div>
     <div class="menu">
       <a class="item" href="#/">Início</a>
       <a class="item" href="#/horarios">Horarios</a>

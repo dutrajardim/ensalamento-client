@@ -18,10 +18,18 @@
             <td>{{turma.descricao}}</td>
             <td>
               <div class="btn-group">
-                <button v-on:click="edit(turma)">E</button>
-                <button v-on:click="remove(turma)">X</button>
-                <button v-on:click="disciplinas(turma)">D</button>
-                <button v-on:click="horarios(turma)">H</button>
+                <button v-on:click="edit(turma)" v-tooltip.bottom="{ content: 'Editar', class: 'red'}">
+                  <icon name="edit"></icon>
+                </button>
+                <button v-on:click="remove(turma)" v-tooltip.bottom="{ content: 'Remover', class: 'red'}">
+                  <icon name="trash"></icon>
+                </button>
+                <button v-on:click="disciplinas(turma)" v-tooltip.bottom="{ content: 'Visualizar disciplinas', class: 'red'}">
+                  <icon name="graduation-cap"></icon>
+                </button>
+                <button v-on:click="horarios(turma)" v-tooltip.bottom="{ content: 'Visualizar horarios das turmas', class: 'red'}">
+                  <icon name="calendar"></icon>
+                </button>
               </div>
             </td>
           </tr>
@@ -36,6 +44,11 @@
 <script>
 import axios from 'axios'
 import Simplert from 'vue2-simplert'
+import 'vue-awesome/icons/trash'
+import 'vue-awesome/icons/edit'
+import 'vue-awesome/icons/calendar'
+import 'vue-awesome/icons/graduation-cap'
+
 export default {
   data () {
     return {
