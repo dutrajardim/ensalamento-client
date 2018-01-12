@@ -46,7 +46,6 @@ export default {
   created () {
     const id = this.$route.params.id
     if (typeof id !== 'undefined') {
-      
       axios.get(`${window.apiHostname}/api/v1/horarios/${id}`)
         .then(response => {
           const data = response.data

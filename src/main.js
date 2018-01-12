@@ -12,7 +12,7 @@ Vue.use(Tooltip)
 Vue.config.productionTip = false
 Vue.component('icon', Icon)
 // window.apiHostname = 'http://laravel-mysql-persistent-ensalamento.1d35.starter-us-east-1.openshiftapps.com'
-window.apiHostname = 'http://localhost:8000'
+window.apiHostname = 'http://52.205.160.150'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
