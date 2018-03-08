@@ -2,13 +2,13 @@
   border: $box-border-size solid $box-border-color;
   margin: 25px 5px;
   padding: 9px;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   align-items: stretch;
   border-radius: 3px;
   color: $box-head-color;
 
-  head {
+  header {
     margin-top: -19px;
     font-family: Arial, Helvetica, sans-serif;
     background-color: #fff;

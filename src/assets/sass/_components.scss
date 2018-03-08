@@ -1,0 +1,73 @@
+.semesters-header {
+  align-self: center;
+  align-items: center;
+
+  &__text {
+    background-color: $second-color;
+    height: 29px;
+    border: 0;
+    border-right: 1px solid darken($second-color, 4%);
+    border-bottom: 1px solid darken($second-color, 4%);
+
+    line-height: 29px;
+    color: #fff;
+    font-size: 0.65em;
+    text-transform: uppercase;
+
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+.alert {
+  &__attention {
+    margin: 25px 5px;
+    padding: 9px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 3px;
+    color: $box-head-color;
+    font-size: 0.9em;
+  }
+}
+
+.appointment {
+	user-select: none;
+	display: inline-block;
+	margin: 3px 15px 10px 3px;
+	align-items: center;
+	justify-content: center;
+  text-transform: uppercase;
+  font-size: 10px;
+	cursor: move;
+  position: relative;
+
+  &__turma {
+    background-color: teal;
+    text-align: center;
+    height: 35px;
+    border-radius: 2px;
+    color: #fff;
+    padding-top: 2px;
+    width: 110px;
+  }
+  &__disciplina {
+    position: absolute;
+    top: 15px;
+    left: 5px;
+    font-size: 8px;
+    background-color: #fff;
+    color: darkred;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    height: 25px;
+    display: flex;
+    width: 110px;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    text-align: center;
+  }
+}

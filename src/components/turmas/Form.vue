@@ -1,34 +1,57 @@
 <template>
-  <div class="card">
-    <form action="POST" v-on:submit.prevent="save($event)" class="form-s1">
-      <input type="text" hidden v-model="id">
-      <ul>
-        <li>
-          <label for="abreviacao">Abreviação</label>
-          <input type="text" v-model="abreviacao">
-          <span>Ex. de abreviação é ADS1AN-BRA</span>
-        </li>
-        <li>
-          <label for="descricao">Descrição</label>
-          <textarea v-model="descricao" col="3"></textarea>
-          <span>Descrição da turma</span>
-        </li>
-        <li>
-          <input type="submit" value="Salvar" class="button-s1 inverse">
-        </li>
-      </ul>
-    </form>
-    <simplert isUseRadius=true isUseIcon=true ref="simplert"></simplert>
+  <div class="container">
+    <Breadcrumb :list="breadcrumbs"></Breadcrumb>
+    <div class="card">
+      <div class="container__row">
+        <div class="container__col-12">
+          <div class="btn-group">
+            <button v-on:click="$router.go(-1)">
+              <icon name="arrow-left"></icon>
+            </button>
+          </div>
+        </div>
+        <div class="container__col-12 centered">
+          <form action="POST" v-on:submit.prevent="save($event)" class="form-s1">
+            <input type="text" hidden v-model="id">
+            <ul>
+              <li>
+                <label for="abreviacao">Abreviação</label>
+                <input type="text" v-model="abreviacao">
+                <span>Ex. de abreviação é ADS1AN-BRA</span>
+              </li>
+              <li>
+                <label for="descricao">Descrição</label>
+                <textarea v-model="descricao" col="3"></textarea>
+                <span>Descrição da turma</span>
+              </li>
+              <li>
+                <input type="reset" value="Cancelar" class="button-s1" v-on:click="$router.push(`/turmas`)">
+                <input type="submit" value="Salvar" class="button-s1 inverse">
+              </li>
+            </ul>
+          </form>
+        </div>
+        <simplert isUseRadius=true isUseIcon=true ref="simplert"></simplert>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import Breadcrumb from '@/components/includes/Breadcrumb'
 import Simplert from 'vue2-simplert'
 import axios from 'axios'
 
 export default {
+  components: {
+    Simplert,
+    Breadcrumb
+  },
   data () {
     return {
+      breadcrumbs: [
+        { name: 'Turmas', link: '#/turmas' }
+      ],
       abreviacao: '',
       descricao: '',
       id: ''
@@ -39,6 +62,11 @@ export default {
     if (typeof id !== 'undefined') {
       axios.get(`${window.apiHostname}/api/v1/turmas/${id}`)
         .then(response => {
+          this.breadcrumbs.push({
+            name: `Editar turma (${response.data.abreviacao})`,
+            link: `#/turmas/${id}/editar`,
+            class: 'current'
+          })
           const data = response.data
           this.id = data.id
           this.abreviacao = data.abreviacao
@@ -51,6 +79,12 @@ export default {
             type: 'alert'
           })
         })
+    } else {
+      this.breadcrumbs.push({
+        name: 'Nova turma',
+        link: `#/turmas/cadastrar`,
+        class: 'current'
+      })
     }
   },
   methods: {
@@ -104,9 +138,6 @@ export default {
         })
       }
     }
-  },
-  components: {
-    Simplert
   }
 }
 </script>

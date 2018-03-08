@@ -1,47 +1,63 @@
 <template>
-  <div class="card">
-    <span class="actions">
-      <a href="#/disciplinas/cadastrar" class="button-s1">Adicionar disciplina</a>
-    </span>
-    <div class="card-block">
-      <table class="table-s1">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="disciplina in disciplinas" v-bind:key="disciplina.id">
-            <td>{{disciplina.nome}}</td>
-            <td>
-              <div class="btn-group">
-                <button v-on:click="edit(disciplina)" v-tooltip.bottom='{ content: "Editar", class: "red"}'>
-                  <icon name="edit"></icon>
-                </button>
-                <button v-on:click="remove(disciplina)" v-tooltip.bottom='{ content: "Remover", class: "red"}'>
-                  <icon name="trash"></icon>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-        <tfoot></tfoot>
-      </table>
+  <div class="container">
+    <Breadcrumb :list="breadcrumbs"></Breadcrumb>
+    <div class="card">
+      <div class="container__row">
+        <div class="container__col-12 right-aligned">
+          <a href="#/disciplinas/cadastrar" class="button-s1">Adicionar disciplina</a>
+        </div>
+      </div>
+      <div class="container__row">
+        <div class="container__col-12 auto-scrolled">
+          <table class="table-s1">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="disciplina in disciplinas" v-bind:key="disciplina.id">
+                <td>{{disciplina.nome}}</td>
+                <td>
+                  <div class="btn-group">
+                    <button v-on:click="edit(disciplina)" v-tooltip.bottom='{ content: "Editar", class: "red"}'>
+                      <icon name="edit"></icon>
+                    </button>
+                    <button v-on:click="remove(disciplina)" v-tooltip.bottom='{ content: "Remover", class: "red"}'>
+                      <icon name="trash"></icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot></tfoot>
+          </table>
+        </div>
+      </div>
+      <simplert isUseRadius=true isUseIcon=true ref="simplert"></simplert>
     </div>
-    <simplert isUseRadius=true isUseIcon=true ref="simplert"></simplert>
   </div>
 </template>
 
 <script>
+import Breadcrumb from '@/components/includes/Breadcrumb'
 import axios from 'axios'
 import Simplert from 'vue2-simplert'
 import 'vue-awesome/icons/trash'
 import 'vue-awesome/icons/edit'
+
 export default {
+  components: {
+    Simplert,
+    Breadcrumb
+  },
   data () {
     return {
-      disciplinas: []
+      disciplinas: [],
+      breadcrumbs: [
+        { name: 'Disciplinas', link: '#/disciplinas', class: 'current' }
+      ]
     }
   },
   created () {
@@ -78,9 +94,6 @@ export default {
     edit (disciplina) {
       this.$router.push(`/disciplinas/editar/${disciplina.id}`)
     }
-  },
-  components: {
-    Simplert
   }
 }
 </script>

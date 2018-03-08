@@ -1,160 +1,222 @@
 <template>
-  <div class="card schedule">
-    <div class="card-block">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <template v-for="(dia,dKey) in semana">
-              <transition name="slide-fade">
-                <th
-                  v-if="not(showDay(dia))">
-                  {{ dia }}
-                  <div class="actions">
-                    <button class="button-s1" v-on:click="hideDay(dia)">
-                      <icon name="eye-slash"></icon>
-                    </button>
-                  </div>
-                </th>
-              </transition>
-            </template>
-          </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(horario, hKey) in horarios" v-bind:key="hKey">
-                <td class="left-head"><span>{{horario}}</span></td>
-                <template v-for="(dia, dKey) in semana">
-                <transition name="slide-fade">
-                    <td
-                    v-on:dragenter="handleDragEnter($event)"
-                    v-on:dragleave="handleDragLeave($event)"
-                    v-on:dragover.prevent="handleDragOver($event)"
-                    v-on:drop.prevent="handleDrop({dKey, hKey},$event)"
-                    v-if="not(showDay(dia))">
-                        <div class="actions" v-if="appointment(dKey, hKey)">
-                        <button class="button-s1" v-on:click="removeEnsalamento(dKey, hKey)">
-                            <icon name="remove"></icon>
+  <div class="container">
+    <Breadcrumb :list="breadcrumbs"></Breadcrumb>
+    <div class="card">
+      <div class="container__row">
+        <div class="container__col-12">
+          <div class="btn-group">
+            <button v-on:click="$router.go(-1)">
+              <icon name="arrow-left"></icon>
+            </button>
+            <button
+              v-on:click="$router.push(`/turmas/${turma.id}/disciplinas?semestre=${panelSemestre}&ano=${panelAno}`)"
+              v-tooltip.bottom="{ content: 'Disciplinas'}" >
+              <icon name="graduation-cap"></icon>
+            </button>
+          </div>
+          <SemesterHeader :panelAno="panelAno" :panelSemestre="panelSemestre" @data-updated="semesterHeaderHendler"></SemesterHeader>
+        </div>
+      </div>
+
+      <div class="container__row">
+        <div class="container__col-md-12 auto-scrolled">
+          <table class="schedule">
+            <thead>
+              <tr>
+                <th></th>
+                <template v-for="(dia,dKey) in semana">
+                  <transition name="slide-fade" v-bind:key="dKey">
+                    <th
+                      v-if="not(showDay(dia))">
+                      {{ dia }}
+                      <div class="actions">
+                        <button class="button-s1" v-on:click="hideDay(dia)">
+                          <icon name="eye-slash"></icon>
                         </button>
-                        </div>
-                        <transition name="slide-fade" mode="out-in">
-                        <Appointment 
-                            v-if="appointment(dKey, hKey)"
-                            v-bind:appointment="appointment(dKey, hKey)"></Appointment>
-                        <div class="clear-appointment" v-else></div>
-                        </transition>
-                    </td>
-                </transition>
+                      </div>
+                    </th>
+                  </transition>
                 </template>
-            </tr>
-        </tbody>
-        <tfoot>
-        </tfoot>
-      </table>
-    </div>
-    <transition name="slide-fade">
-      <div class="btns" v-if="hasChange()">
-        <button class="button-s1" v-on:click="resetState">Resetar</button>
-        <button class="button-s1" v-on:click="saveState">Salvar</button>
+              </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(horario, hKey) in horarios" v-bind:key="hKey">
+                    <td class="left-head"><span>{{horario}}</span></td>
+                    <template v-for="(dia, dKey) in semana">
+                    <transition name="slide-fade" v-bind:key="(hKey*7)+dKey">
+                        <td
+                        v-on:dragenter="handleDragEnter($event)"
+                        v-on:dragleave="handleDragLeave($event)"
+                        v-on:dragover.prevent="handleDragOver($event)"
+                        v-on:drop.prevent="handleDrop({dKey, hKey},$event)"
+                        v-if="not(showDay(dia))">
+                            <div class="actions" v-if="appointment(dKey, hKey)">
+                            <button class="button-s1" v-on:click="removeEnsalamento(dKey, hKey)">
+                                <icon name="remove"></icon>
+                            </button>
+                            </div>
+                            <transition name="slide-fade" mode="out-in">
+                            <Appointment
+                                v-if="appointment(dKey, hKey)"
+                                v-bind:appointment="appointment(dKey, hKey)"></Appointment>
+                            <div class="clear-appointment" v-else></div>
+                            </transition>
+                        </td>
+                    </transition>
+                    </template>
+                </tr>
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
       </div>
-    </transition>
-    <div class="box-s1">
-      <head>Disciplinas de turmas para agendamento</head>
-      <main>
-        <Appointment
-          v-for="(dt, key) in disciplinasTurmas"
-          v-bind:key="key" 
-          v-bind:appointment="dt"></Appointment>
-      </main>
-      <footer>Carregue os componentes para a tabela para agendamento</footer>
-    </div>
-    <template v-if="daysHidden.length">
-      <div class="box-s1">
-        <head>Dias da semana ocultado</head>
-        <main>
-          <button 
-            class="button-s1"
-            v-for="(day, key) in daysHidden"
-            v-bind:key="key"
-            v-on:click="unHideDay(day)">
-            <icon name="eye"></icon> {{day}}
-          </button>
-        </main>
-        <footer>Click no botão para mostra-lo na tabela</footer>
+
+      <div class="container__row">
+        <div class="container__col-12">
+          <div class="box-s1">
+            <head>Disciplinas de turmas para agendamento</head>
+            <main>
+              <Appointment
+                v-for="(dt, key) in filteredDisciplinas"
+                v-bind:key="key"
+                v-bind:appointment="dt"></Appointment>
+            </main>
+            <footer>Carregue os componentes para a tabela para agendamento</footer>
+          </div>
+        </div>
       </div>
-    </template>
-    <simplert isUseRadius=true isUseIcon=true ref="simplert"></simplert>
+
+      <div class="container__row">
+        <div class="container__col-12">
+          <template v-if="daysHidden.length">
+            <div class="box-s1">
+              <head>Dias da semana ocultado</head>
+              <main>
+                <button
+                  class="button-s1"
+                  v-for="(day, key) in daysHidden"
+                  v-bind:key="key"
+                  v-on:click="unHideDay(day)">
+                  <icon name="eye"></icon> {{day}}
+                </button>
+              </main>
+              <footer>Click no botão para mostra-lo na tabela</footer>
+            </div>
+          </template>
+        </div>
+      </div>
+      <simplert isUseRadius=true isUseIcon=true ref="simplert"></simplert>
+    </div>
   </div>
 </template>
 
 <script>
+import Breadcrumb from '@/components/includes/Breadcrumb'
+import SemesterHeader from '@/components/includes/SemesterHeader'
+import Appointment from '@/components/includes/Appointment'
 import axios from 'axios'
-import Appointment from '../horarios/Appointment'
 import Simplert from 'vue2-simplert'
 import 'vue-awesome/icons/eye-slash'
 import 'vue-awesome/icons/eye'
 import 'vue-awesome/icons/remove'
+import 'vue-awesome/icons/arrow-left'
 
 export default {
+  components: {
+    Appointment,
+    Simplert,
+    Breadcrumb,
+    SemesterHeader
+  },
   data () {
     return {
+      breadcrumbs: [
+        { name: 'Turmas', link: '#/turmas' }
+      ],
+      turma: {},
       count: '',
       semana: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado'],
       horarios: [1, 2],
-      disciplinasTurmas: [],
+      disciplinas: [],
       ensalamentos: [],
-      daysHidden: ['Domingo']
+      daysHidden: ['Domingo'],
+      panelAno: 2018,
+      panelSemestre: 1
     }
   },
   created () {
-    this.resetState()
+    const id = this.$route.params.id
+    this.getTurmaInfo({ id })
+    // this.resetState()
   },
   methods: {
-    not (param) {
-      return !param
+    save (horario) {
+      axios.post(`${window.apiHostname}/api/v1/horarios`, horario)
+        .then(response => {
+          this.getHorarios({ id: this.turma.id })
+        })
+        .catch(e => {
+          this.$refs.simplert.openSimplert({
+            title: 'Erro',
+            message: `Ocorreu um erro ao tentar salvar os dados:\n${e.response.data.message}`,
+            type: 'alert'
+          })
+        })
     },
-    hasChange () {
-      if (this.count !== this.ensalamentos.length) return true
-      let has = false
-      for (let ensalamento of this.ensalamentos) {
-        if (!ensalamento.hasOwnProperty('updated_at')) {
-          has = true
-          break
+    remove (horario) {
+      axios.delete(`${window.apiHostname}/api/v1/horarios/${horario.id}`)
+        .then(response => {
+          this.getHorarios({ id: this.turma.id })
+        })
+        .catch(e => {
+          this.$refs.simplert.openSimplert({
+            title: 'Erro',
+            message: `Ocorreu um erro ao tentar remover os dados:\n${e.response.data.message}`,
+            type: 'alert'
+          })
+        })
+    },
+    removeEnsalamento (dia, horario) {
+      for (let key in this.ensalamentos) {
+        let el = this.ensalamentos[key]
+        if (parseInt(el.dia) === (dia + 1) && el.horario === this.horarios[horario]) {
+          this.remove(el)
         }
       }
-      return has
     },
     resetState () {
       const id = this.$route.params.id
       this.getDisciplinas({ id })
       this.getHorarios({ id })
     },
-    saveState () {
-      const id = this.$route.params.id
-      const data = this.ensalamentos.map((el) => {
-        return {
-          dia: `${el.dia}`,
-          turmas_id: el.turmas_id,
-          horario: el.horario,
-          disciplinas_id: el.disciplinas_id
-        }
-      })
-      console.log(data)
-      axios.post(`${window.apiHostname}/api/v1/turmas/${id}/horarios`, data)
+    semesterHeaderHendler (data) {
+      this.panelAno = data.ano
+      this.panelSemestre = data.semestre
+      this.resetState()
+    },
+    getTurmaInfo ({ id }) {
+      axios.get(`${window.apiHostname}/api/v1/turmas/${id}`)
         .then(response => {
-          this.$refs.simplert.openSimplert({
-            title: 'Sucesso',
-            message: 'Informações salvas',
-            type: 'info'
+          this.turma = response.data
+          this.breadcrumbs.push({
+            name: `Visualizar horarios (${response.data.abreviacao})`,
+            link: `#/turmas/${id}/horarios`,
+            class: 'current'
           })
-          this.resetState()
+          this.getDisciplinas({ id })
+          this.getHorarios({ id })
         })
         .catch(() => {
-          this.$refs.simplert.openSimplert({
+          this.simplert.openSimplert({
             title: 'Erro',
-            message: 'Não foi possível salvar as informações requeridas',
+            message: 'Não foi possível recuperar informação da turma',
             type: 'alert'
           })
         })
+    },
+    not (param) {
+      return !param
     },
     unHideDay (day) {
       this.daysHidden = this.daysHidden.filter(el => {
@@ -170,22 +232,16 @@ export default {
     getDisciplinas ({ id }) {
       axios.get(`${window.apiHostname}/api/v1/turmas/${id}/disciplinas`)
         .then(response => {
-          const data = []
-          let turmaDisc
-          response.data.forEach((disciplina) => {
-            turmaDisc = {
-              abreviacao: disciplina.pivot.turmas_abreviacao,
-              descricao: disciplina.pivot.turmas_descricao,
-              id: disciplina.pivot.turmas_id,
-              disciplina: {
-                id: disciplina.id,
-                nome: disciplina.nome,
-                horarios: disciplina.pivot.horarios
-              }
+          this.disciplinas = response.data.map((disciplina, key) => {
+            let colorIndex = (disciplina.id % window.colors.length)
+            return {
+              abreviacao: this.turma.abreviacao,
+              descricao: this.turma.descricao,
+              id: this.turma.id,
+              disciplina,
+              color: window.colors[colorIndex]
             }
-            data.push(turmaDisc)
           })
-          this.disciplinasTurmas = data
         })
         .catch(error => {
           console.log(error)
@@ -201,21 +257,14 @@ export default {
           console.log(error)
         })
     },
-    removeEnsalamento (dia, horario) {
-      for (let key in this.ensalamentos) {
-        let el = this.ensalamentos[key]
-        if (parseInt(el.dia) === dia && el.horario === this.horarios[horario]) {
-          this.ensalamentos.splice(key, 1)
-        }
-      }
-    },
     appointment (dia, horario) {
       for (let key in this.ensalamentos) {
         let el = this.ensalamentos[key]
-        if (parseInt(el.dia) === dia && el.horario === this.horarios[horario]) {
+        if (parseInt(el.dia) === (dia + 1) && el.horario === this.horarios[horario]) {
           let resp
-          for (let dt of this.disciplinasTurmas) {
-            if (dt.id === el.turmas_id && dt.disciplina.id === el.disciplinas_id) {
+          // console.log(el)
+          for (let dt of this.filteredDisciplinas) {
+            if (dt.disciplina.id === el.disciplina.id) {
               resp = dt
               break
             }
@@ -238,36 +287,36 @@ export default {
       return false
     },
     handleDrop (params, e) {
-      try {
-        let data = JSON.parse(e.dataTransfer.getData('text/plain'))
-        if (data) {
-          const hasEnsalamento = this.ensalamentos.findIndex(el => {
-            return (parseInt(el.dia) === params.dKey && el.horario === this.horarios[params.hKey])
-          })
-          if (hasEnsalamento === -1) {
-            this.ensalamentos.push({
-              dia: params.dKey,
-              horario: this.horarios[params.hKey],
-              turmas_id: data.id,
-              disciplinas_id: data.disciplina.id
-            })
-            console.log(this.ensalamentos)
-          } else {
-            this.$refs.simplert.openSimplert({
-              title: 'Erro',
-              message: 'Remova o agendamento presente para adicionar outro',
-              type: 'alert'
-            })
-          }
-        }
-      } catch (e) {
+      let data = JSON.parse(e.dataTransfer.getData('text/plain'))
 
+      if (data) {
+        const hasEnsalamento = this.ensalamentos.findIndex(el => {
+          return (parseInt(el.dia) === (params.dKey + 1) && el.horario === this.horarios[params.hKey])
+        })
+
+        if (hasEnsalamento !== -1) {
+          return this.$refs.simplert.openSimplert({
+            title: 'Erro',
+            message: 'Remova o agendamento presente para adicionar outro',
+            type: 'alert'
+          })
+        }
+
+        this.save({
+          disciplinas_turmas_id: data.disciplina.relationship_id,
+          dia: (params.dKey + 1).toString(),
+          horario: this.horarios[params.hKey]
+        })
       }
     }
   },
-  components: {
-    Appointment,
-    Simplert
+  computed: {
+    filteredDisciplinas: function () {
+      return this.disciplinas.filter((turDis) => {
+        return ((parseInt(turDis.disciplina.semestre) === this.panelSemestre) &&
+          (parseInt(turDis.disciplina.ano) === this.panelAno))
+      })
+    }
   }
 }
 </script>

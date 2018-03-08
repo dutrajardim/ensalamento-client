@@ -9,9 +9,9 @@ import TurmasForm from '@/components/turmas/Form'
 import TurmasList from '@/components/turmas/List'
 import TurmasDisciplinas from '@/components/turmas/Disciplinas'
 import TurmasHorarios from '@/components/turmas/Horarios'
-import Schedule from '@/components/horarios/Schedule'
-import HorariosList from '@/components/horarios/List'
-import HorariosForm from '@/components/horarios/Form'
+import EnsalamentosList from '@/components/ensalamentos/List'
+import EnsalamentosForm from '@/components/ensalamentos/Form'
+import Schedule from '@/components/ensalamentos/Schedule'
 
 Vue.use(Router)
 
@@ -78,22 +78,22 @@ export default new Router({
       component: Home
     },
     {
-      path: '/horarios/cadastrar',
-      name: 'HorariosForm',
-      component: HorariosForm
+      path: '/ensalamentos',
+      name: 'EnsalamentosList',
+      component: EnsalamentosList
     },
     {
-      path: '/horarios',
-      name: 'HorariosList',
-      component: HorariosList
+      path: '/ensalamentos/cadastrar',
+      name: 'EnsalamentosForm',
+      component: EnsalamentosForm
     },
     {
-      path: '/horarios/:id/editar',
-      name: 'HorariosEditForm',
-      component: HorariosForm
+      path: '/ensalamentos/editar/:id',
+      name: 'EnsalamentosEditForm',
+      component: EnsalamentosForm
     },
     {
-      path: '/horarios/:id/ensalamentos',
+      path: '/ensalamentos/:id',
       name: 'Schedule',
       component: Schedule
     }

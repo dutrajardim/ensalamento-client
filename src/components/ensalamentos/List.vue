@@ -4,7 +4,7 @@
     <div class="card">
       <div class="container__row">
         <div class="container__col-12 right-aligned">
-          <a href="#/salas/cadastrar" class="button-s1">Adicionar sala</a>
+          <a href="#/ensalamentos/cadastrar" class="button-s1">Adicionar ensalamento</a>
         </div>
       </div>
       <div class="container__row">
@@ -12,31 +12,25 @@
           <table class="table-s1">
             <thead>
               <tr>
-                <th>Nome</th>
-                <th>Capacidade</th>
-                <th style="text-align: center">Ar Condicionado</th>
+                <th>Titulo</th>
+                <th>Status</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="sala in salas" v-bind:key="sala.id">
-                <td>{{sala.nome}}</td>
-                <td>{{sala.capacidade}}</td>
-                <td style="text-align: center">
-                  <template v-if="sala.arCondicionado">
-                    <icon name="thumbs-up" class="thumbs-up"></icon>
-                  </template>
-                  <template v-else>
-                    <icon name="thumbs-down" class="thumbs-down"></icon>
-                  </template>
-                </td>
+              <tr v-for="ensalamento in ensalamentos" v-bind:key="ensalamento.id">
+                <td>{{ensalamento.titulo}}</td>
+                <td>{{status[ensalamento.status]}}</td>
                 <td>
                   <div class="btn-group">
-                    <button v-on:click="edit(sala)" v-tooltip.bottom="{ content: 'Editar', class:'red' }">
+                    <button v-on:click="remove(ensalamento)" v-tooltip.bottom="{ content: 'Remover'}">
+                      <icon name="trash"></icon>
+                    </button>
+                    <button v-if="(ensalamento.status === 'P')" v-on:click="edit(ensalamento)" v-tooltip.bottom="{ content: 'Editar'}">
                       <icon name="edit"></icon>
                     </button>
-                    <button v-on:click="remove(sala)" v-tooltip.bottom="{ content: 'Remover', class: 'red' }">
-                      <icon name="trash"></icon>
+                    <button v-if="(ensalamento.status === 'P')" v-on:click="$router.push(`/ensalamentos/${ensalamento.id}`)" v-tooltip.bottom="{ content: 'Visualizar ensalamento'}">
+                      <icon name="calendar"></icon>
                     </button>
                   </div>
                 </td>
@@ -67,31 +61,42 @@ export default {
   },
   data () {
     return {
-      salas: [],
+      ensalamentos: [],
       breadcrumbs: [
-        { name: 'Salas', link: '#/salas', class: 'current' }
-      ]
+        { name: 'Ensalamentos', link: '#/ensalamentos', class: 'current' }
+      ],
+      status: {
+        A: 'Aguardando',
+        T: 'Em trabalho',
+        E: 'Erro',
+        P: 'Pronto'
+      },
+      timer: ''
     }
   },
   created () {
     this.updateList()
+    this.timer = setInterval(this.updateList, 8000)
+  },
+  beforeDestroy () {
+    clearInterval(this.timer)
   },
   methods: {
     updateList () {
-      axios.get(`${window.apiHostname}/api/v1/salas`)
+      axios.get(`${window.apiHostname}/api/v1/ensalamentos`)
         .then(response => {
-          this.salas = response.data
+          this.ensalamentos = response.data
         })
         .catch(err => {
           console.log(err)
         })
     },
-    remove (sala) {
-      axios.delete(`${window.apiHostname}/api/v1/salas/${sala.id}`)
+    remove (ensalamento) {
+      axios.delete(`${window.apiHostname}/api/v1/ensalamentos/${ensalamento.id}`)
         .then(response => {
           this.$refs.simplert.openSimplert({
             title: 'Ok',
-            message: 'Sala removida com sucesso',
+            message: 'Ensalamento removida com sucesso',
             type: 'info'
           })
           this.updateList()
@@ -99,13 +104,13 @@ export default {
         .catch(() => {
           this.$refs.simplert.openSimplert({
             title: 'Erro',
-            message: 'Erro ao tentar excluir sala',
+            message: 'Erro ao tentar excluir ensalamento',
             type: 'alert'
           })
         })
     },
-    edit (sala) {
-      this.$router.push(`/salas/editar/${sala.id}`)
+    edit (ensalamento) {
+      this.$router.push(`/ensalamentos/editar/${ensalamento.id}`)
     }
   }
 }
