@@ -221,7 +221,15 @@ export default {
     handleDrop (params, e) {
       try {
         let data = JSON.parse(e.dataTransfer.getData('text/plain'))
+
         if (data) {
+          if (data.ensalamento.horario !== this.horarios[params.hKey] || data.ensalamento.dia !== (params.dKey + 1).toString()) {
+            return this.$refs.simplert.openSimplert({
+              title: 'Erro',
+              message: `Não é possível editar o dia ou horario da aula, apenas a sala!`,
+              type: 'alert'
+            })
+          }
           let replace = {
             from: {
               horario: data.ensalamento.horario,
