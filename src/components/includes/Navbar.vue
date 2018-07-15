@@ -8,6 +8,8 @@
         <a class="item" href="#/disciplinas">Disciplinas</a>
         <a class="item" href="#/turmas">Turmas</a>
         <a class="item" href="#/ensalamentos">Ensalamentos</a>
+        <a class="item" href="#/formacoes">Formações</a>
+        <a class="item" href="#/professores">Professores</a>
       </div>
     </nav>
   </div>

@@ -12,6 +12,12 @@ import TurmasHorarios from '@/components/turmas/Horarios'
 import EnsalamentosList from '@/components/ensalamentos/List'
 import EnsalamentosForm from '@/components/ensalamentos/Form'
 import Schedule from '@/components/ensalamentos/Schedule'
+import FormacoesForm from '@/components/formacoes/Form'
+import FormacoesList from '@/components/formacoes/List'
+import ProfessoresForm from '@/components/professores/Form'
+import ProfessoresList from '@/components/professores/List'
+import ProfessoresFormacoes from '@/components/professores/Formacoes'
+import ProfessoresDisciplinas from '@/components/professores/Disciplinas'
 
 Vue.use(Router)
 
@@ -96,6 +102,46 @@ export default new Router({
       path: '/ensalamentos/:id',
       name: 'Schedule',
       component: Schedule
+    },
+    {
+      path: '/formacoes/cadastrar',
+      name: 'FormacoesForm',
+      component: FormacoesForm
+    },
+    {
+      path: '/formacoes',
+      name: 'FormacoesList',
+      component: FormacoesList
+    },
+    {
+      path: '/formacoes/editar/:id',
+      name: 'FormacoesEditForm',
+      component: FormacoesForm
+    },
+    {
+      path: '/professores/cadastrar',
+      name: 'ProfessoresForm',
+      component: ProfessoresForm
+    },
+    {
+      path: '/professores',
+      name: 'ProfessoresList',
+      component: ProfessoresList
+    },
+    {
+      path: '/professores/:id/editar',
+      name: 'ProfessoresEditForm',
+      component: ProfessoresForm
+    },
+    {
+      path: '/professores/:id/formacoes',
+      name: 'ProfessoresFormacoesForm',
+      component: ProfessoresFormacoes
+    },
+    {
+      path: '/professores/:id/disciplinas',
+      name: 'ProfessoresDisciplinasForm',
+      component: ProfessoresDisciplinas
     }
   ]
 })
